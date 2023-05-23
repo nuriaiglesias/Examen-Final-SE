@@ -5,10 +5,6 @@
 #include "pin_mux.h"
 #include "clock_config.h"
 
-// LED (RG)
-// LED_GREEN = PTD5
-// LED_RED = PTE29
-
 int verde = 0;
 int rojo = 0;
 
@@ -126,53 +122,47 @@ int main(void)
   BOARD_BootClockRUN();
   BOARD_InitDebugConsole();
 
-  while(1){
   char command[256];
 
-  PRINTF("$ ");  // Muestra el prompt
-
-  // Lee el comando introducido por el usuario
-  SCANF("%s", command);
-
-  if (strcmp(command, "led1") == 0)
-  {
-    PRINTF("%s", command);
-    verde = 1;
-    rojo = 0;
-    LED_GREEN_ON();
-    LED_RED_OFF();
-  }
-  else if (strcmp(command, "led2") == 0)
-  {
-    PRINTF("%s", command);
-    verde = 0;
-    rojo = 1;
-    LED_RED_ON();
-    LED_GREEN_OFF();
-  }
-  else if (strcmp(command, "off") == 0)
-  {
-    PRINTF("%s", command);
-    verde = 0;
-    rojo = 0;
-    LED_GREEN_OFF();
-    LED_RED_OFF();
-  }
-  else if (strcmp(command, "toggle") == 0)
-  {
-    PRINTF("%s", command);
-    if(verde == 1){
-        LED_GREEN_OFF();
-        LED_RED_ON();
-        verde = 0;
-        rojo = 1;
-    }else if(rojo == 1){
-        LED_GREEN_ON();
-        LED_RED_OFF();
-        verde = 1;
-        rojo = 0;
-    }
-  }
+  while(1){
+        PRINTF("$ ");  // Muestra el prompt
+        SCANF("%s", command);
+        PRINTF("%s\n", command);
+        if(strcmp(command, "led1") == 0)
+        {
+          verde = 1;
+          rojo = 0;
+          LED_GREEN_ON();
+          LED_RED_OFF();
+        }
+        else if(strcmp(command, "led2") == 0)
+        {
+          verde = 0;
+          rojo = 1;
+          LED_RED_ON();
+          LED_GREEN_OFF();
+        }
+        else if(strcmp(command, "off") == 0)
+        {
+          verde = 0;
+          rojo = 0;
+          LED_GREEN_OFF();
+          LED_RED_OFF();
+        }
+        else if(strcmp(command, "toggle") == 0)
+        {
+          if(verde == 1){
+              LED_GREEN_OFF();
+              LED_RED_ON();
+              verde = 0;
+              rojo = 1;
+          }else if(rojo == 1){
+              LED_GREEN_ON();
+              LED_RED_OFF();
+              verde = 1;
+              rojo = 0;
+          }
+        }
   }
 
     return 0;
