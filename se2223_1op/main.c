@@ -4,6 +4,7 @@
 #include "board.h"
 #include "pin_mux.h"
 #include "clock_config.h"
+#include "lcd.h"
 
 int verde = 0;
 int rojo = 0;
@@ -123,8 +124,12 @@ int main(void)
   BOARD_InitDebugConsole();
 
   char command[256];
+  char ch;
+
 
   while(1){
+        ch = GETCHAR();
+        PUTCHAR(ch);
         PRINTF("$ ");  // Muestra el prompt
         SCANF("%s", command);
         PRINTF("%s\n", command);
@@ -132,35 +137,41 @@ int main(void)
         {
           verde = 1;
           rojo = 0;
-          LED_GREEN_ON();
-          LED_RED_OFF();
+          Green_LED_On();
+          Red_LED_Off();
         }
         else if(strcmp(command, "led2") == 0)
         {
           verde = 0;
           rojo = 1;
-          LED_RED_ON();
-          LED_GREEN_OFF();
+          Red_LED_Off();
+          Green_LED_Off();
         }
         else if(strcmp(command, "off") == 0)
         {
           verde = 0;
           rojo = 0;
-          LED_GREEN_OFF();
-          LED_RED_OFF();
+          Green_LED_Off();
+          Red_LED_Off();
         }
         else if(strcmp(command, "toggle") == 0)
         {
           if(verde == 1){
-              LED_GREEN_OFF();
-              LED_RED_ON();
+              Green_LED_Off();
+              Red_LED_On();
               verde = 0;
               rojo = 1;
           }else if(rojo == 1){
-              LED_GREEN_ON();
-              LED_RED_OFF();
+              Green_LED_On();
+              Red_LED_Off();
               verde = 1;
               rojo = 0;
+          }
+          else if(rojo == 0 && verde == 0){
+            Green_LED_On();
+            Red_LED_On();
+            verde = 1;
+            rojo = 1;
           }
         }
   }

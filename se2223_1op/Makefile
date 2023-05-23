@@ -3,7 +3,7 @@
 PREFIX=arm-none-eabi-
 
 ARCHFLAGS=-mthumb -mcpu=cortex-m0plus
-COMMONFLAGS=-g3 -Og -Wall -Werror $(ARCHFLAGS)
+COMMONFLAGS=-g3 -O3 -Wall -Werror $(ARCHFLAGS)
 
 CFLAGS=-I. -I./BOARD/ -I./CMSIS -I./drivers -I./utilities $(COMMONFLAGS) -D CPU_MKL46Z256VLL4
 LDFLAGS=$(COMMONFLAGS) --specs=nano.specs -Wl,--gc-sections,-Map,$(TARGET).map,-Tlink.ld
