@@ -1,15 +1,16 @@
 #include "MKL46Z4.h"
+#include "fsl_device_registers.h"
+#include "fsl_debug_console.h"
+#include "board.h"
+#include "pin_mux.h"
+#include "clock_config.h"
 
 // LED (RG)
 // LED_GREEN = PTD5
 // LED_RED = PTE29
 
-int first = 0;
-int first2 = 0;
-int sw1_state = 0;
-int sw2_state = 0;
-int sw1_count = 0;
-int sw2_count = 0;
+int verde = 0;
+int rojo = 0;
 
 // LED_GREEN = PTD5
 void led_green_init()
@@ -112,7 +113,6 @@ void PORTD_Int_Handler(void){
       }
 }
 
-
 int main(void)
 {
   led_green_init();
@@ -121,7 +121,59 @@ int main(void)
   sw2_button_init();
   NVIC_EnableIRQ(PORTC_PORTD_IRQn);
 
-  while(1){}
+  /* Init board hardware. */
+  BOARD_InitPins();
+  BOARD_BootClockRUN();
+  BOARD_InitDebugConsole();
+
+  while(1){
+  char command[256];
+
+  PRINTF("$ ");  // Muestra el prompt
+
+  // Lee el comando introducido por el usuario
+  SCANF("%s", command);
+
+  if (strcmp(command, "led1") == 0)
+  {
+    PRINTF("%s", command);
+    verde = 1;
+    rojo = 0;
+    LED_GREEN_ON();
+    LED_RED_OFF();
+  }
+  else if (strcmp(command, "led2") == 0)
+  {
+    PRINTF("%s", command);
+    verde = 0;
+    rojo = 1;
+    LED_RED_ON();
+    LED_GREEN_OFF();
+  }
+  else if (strcmp(command, "off") == 0)
+  {
+    PRINTF("%s", command);
+    verde = 0;
+    rojo = 0;
+    LED_GREEN_OFF();
+    LED_RED_OFF();
+  }
+  else if (strcmp(command, "toggle") == 0)
+  {
+    PRINTF("%s", command);
+    if(verde == 1){
+        LED_GREEN_OFF();
+        LED_RED_ON();
+        verde = 0;
+        rojo = 1;
+    }else if(rojo == 1){
+        LED_GREEN_ON();
+        LED_RED_OFF();
+        verde = 1;
+        rojo = 0;
+    }
+  }
+  }
 
     return 0;
 }
